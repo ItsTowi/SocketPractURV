@@ -21,8 +21,10 @@ int main(int argc, char **argv){
         exit(0);
     }
     
+    int num1, num2;
     int s;    /* Per treballar amb el socket */
     struct sockaddr_in adr;
+    socklen_t mida;
     char buffer[MIDA_BUFFER];
     int i;
 
@@ -34,17 +36,31 @@ int main(int argc, char **argv){
 
     /* L'adreca de comunicacio sera la IP del servidor, es a dir el parametre */
     adr.sin_addr.s_addr = inet_addr(argv[1]);
- 
-    /* Generem 5 paquets i els enviem */
-    for (i = 0; i < 5; i++)
+
+
+
+    printf("Introducce dos números entre 0 i 99: ");
+    scanf("%d", &num1);
+    scanf("%d", &num2);
+
+    sprintf(buffer, "%d", num1);
+    sendto(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&adr, sizeof(adr));
+
+    sprintf(buffer, "%d", num2);
+    sendto(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&adr, sizeof(adr));
+
+    printf("Paquets enviats!\n");
+
+    recvfrom(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&adr, &mida);
+
+    if ((atoi(buffer) == -1))
     {
-        buffer[0] = i + '0';
-        buffer[1] = '\0';
-
-        sendto(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&adr, sizeof(adr));
-
-        printf("Paquet enviat!\n");
-
+        printf("No esta en el rango indicado");
+        
+    }
+    else
+    {
+        printf("Multiplicacion: %d\n", atoi(buffer));
     }
 
     /* Tanquem el socket */

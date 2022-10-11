@@ -1,4 +1,4 @@
-/* SERVIDOR */
+/* Codi solucio de la practica: SERVIDOR */
 
 /* Inclusio de fitxers .h habituals */
 #include <stdio.h>
@@ -14,21 +14,22 @@
 
 #define MIDA_BUFFER 1024
  
-int main( ){
+int main(){
  
     int s;    /* Per treballar amb el socket */
     struct sockaddr_in serv_adr, client_adr;
     char buffer[MIDA_BUFFER];
     socklen_t mida;
-    int n, i;
+    int n;
+    int pack1, pack2, mul;
     
     /* Volem socket d'internet i no orientat a la connexio */
-    s = socket(/* COMPLETAR */);
+    s = socket(AF_INET, SOCK_DGRAM, 0);
 
     /* Posem les dades del socket */
-    serv_adr.sin_family = /* COMPLETAR */
-    serv_adr.sin_addr.s_addr = /* COMPLETAR */
-    serv_adr.sin_port = /* COMPLETAR */
+    serv_adr.sin_family = AF_INET;
+    serv_adr.sin_addr.s_addr = INADDR_ANY;
+    serv_adr.sin_port = htons(44444);
 
     /* Enllacem el socket */
     n = bind(s, (struct sockaddr*)&serv_adr, sizeof(serv_adr));
@@ -39,16 +40,31 @@ int main( ){
     }
     else
     {
-        i = 0;
         /* Servidor operatiu! */
         printf("Servidor operatiu!\n");
 
-        while (i < 5)   /* Nomes rebre cinc paquets */
+        recvfrom(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&client_adr, &mida);
+        printf("Paquet rebut!\n");
+
+        pack1 = atoi(buffer);
+        printf("El primer paquete es: %d", pack1);
+
+        recvfrom(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&client_adr, &mida);
+        printf("Paquet rebut!\n");
+
+        pack2 = atoi(buffer);
+        printf("El segundo paquete es: %d", pack2);
+
+        if ((pack1 >= 0) && (pack2 >= 0) && (pack1 <= 99) && (pack2 <= 99))
         {
-            recvfrom(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&client_adr, &mida);
-            printf("Paquet rebut!\n");
-            printf("%s\n", buffer);
-            i++;
+            mul = pack1 * pack2;
+            sprintf(buffer, "%d", mul);
+            sendto(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&client_adr, sizeof(client_adr));
+        }
+        else
+        {
+            sprintf(buffer, "-1");
+            sendto(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&client_adr, sizeof(client_adr));
         }
     }
 
