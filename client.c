@@ -43,10 +43,8 @@ int main(int argc, char **argv){
     scanf("%d", &num1);
     scanf("%d", &num2);
 
-    sprintf(buffer, "%d", num1);
-    sendto(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&adr, sizeof(adr));
-
-    sprintf(buffer, "%d", num2);
+    buffer[0] = sprintf(buffer, "%d", num1);
+    buffer[1] = sprintf(buffer, "%d", num2);
     sendto(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&adr, sizeof(adr));
 
     printf("Paquets enviats!\n");

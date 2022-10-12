@@ -46,13 +46,13 @@ int main(){
         recvfrom(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&client_adr, &mida);
         printf("Paquet rebut!\n");
 
-        pack1 = atoi(buffer);
+        pack1 = atoi(buffer[0]);
         printf("El primer paquete es: %d", pack1);
 
         recvfrom(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&client_adr, &mida);
         printf("Paquet rebut!\n");
 
-        pack2 = atoi(buffer);
+        pack2 = atoi(buffer[1]);
         printf("El segundo paquete es: %d", pack2);
 
         if ((pack1 >= 0) && (pack2 >= 0) && (pack1 <= 99) && (pack2 <= 99))
