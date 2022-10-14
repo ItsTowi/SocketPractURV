@@ -36,15 +36,14 @@ int main(int argc, char **argv){
 
     /* L'adreca de comunicacio sera la IP del servidor, es a dir el parametre */
     adr.sin_addr.s_addr = inet_addr(argv[1]);
-
-
+    
+    //sscanf()
 
     printf("Introducce dos números entre 0 i 99: ");
     scanf("%d", &num1);
     scanf("%d", &num2);
 
-    buffer[0] = sprintf(buffer, "%d", num1);
-    buffer[1] = sprintf(buffer, "%d", num2);
+    sprintf(buffer, "%d %d", num1, num2);
     sendto(s, buffer, MIDA_BUFFER, 0, (struct sockaddr*)&adr, sizeof(adr));
 
     printf("Paquets enviats!\n");
